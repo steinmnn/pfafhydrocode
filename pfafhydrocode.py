@@ -181,10 +181,7 @@ def updwn(a, b, upstream = True, oddOrZero = False):
         
     ## all odd (or zero)
     if upstream:
-        if int(trailB) > int(trailA):
-            cond01 = True
-        else:
-            cond01 = allodd(trailB, oddOrZero=oddOrZero)
+        cond01 = allodd(trailB, oddOrZero=oddOrZero)
     else:
         cond01 = allodd(trailA, oddOrZero=oddOrZero)
     
