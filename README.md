@@ -1,5 +1,5 @@
 # pfafhydrocode
-Holds a python module to decode the hydrologicall [Pfafstetter Coding System](https://en.wikipedia.org/wiki/Pfafstetter_Coding_System).
+Holds a python module to decode the hydrological [Pfafstetter Coding System](https://en.wikipedia.org/wiki/Pfafstetter_Coding_System).
 
 The functions `upstream` and `downstream` help to identify watersheds or affected 
 areas of river manipulations.
