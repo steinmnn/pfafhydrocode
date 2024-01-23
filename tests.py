@@ -42,6 +42,9 @@ class TestPfafhydrocode(unittest.TestCase):
     ## updwn() function
     def test_updwn_with_same_number(var):
         var.assertTrue(updwn(1994,1994),'Comparing same_number_should give True.')
+
+    def test_exclude_equal_pfafcode(var):
+        var.assertFalse(updwn(1994, 1994, includeEqual=False), 'Comparing same_number_should give False when includeEqual is set False.')
         
     def test_updwn_with_a_greater_as_b(var):
         var.assertFalse(updwn(1995,1884),"Should be False. Greater A can't be downstream of B.")
@@ -87,7 +90,17 @@ class TestPfafhydrocode(unittest.TestCase):
             results.append(upstream(a,b[:i+1],oddOrZero=True))
             
         var.assertEqual(results, [True for i in range(len(b))],'Should all be True, as we learned from the QGIS project.')
-    
+
+    def test_upstream_with_a_lev5_example_array(var):
+        a = 23267
+        bs = [23261, 23262, 23263, 23264, 23265, 23267, 23266, 23268, 23269]
+        rightresult = [False, False, False, False, False, False, False, True, True]
+
+        var.assertEqual(rightresult, [upstream(a,b,includeEqual=False) for b in bs],'Should be equal. Result form nmizukami/pfaf_decode pfafstetter.check_upstream.')
+
+    def test_upstream_with_a_lev5_example_single(var):
+        var.assertTrue(upstream(23267,23268,includeEqual=False),'23268 is upstream of 23267')
+
     ## downstream() function
     def test_downstream_with_characters(var):
         with var.assertRaises(Exception):

@@ -52,7 +52,7 @@ def allodd(x, oddOrZero = False):
             return(False)
     return(True)
 
-def upstream(a,b,oddOrZero=False):
+def upstream(a,b,oddOrZero=False,includeEqual = True):
     """Checks if b is upstream of a.
     
     The argument 'oddOrZero' can be set to True if the Pfafstetter code is 
@@ -69,13 +69,16 @@ def upstream(a,b,oddOrZero=False):
     
     oddOrZero : bool, optional
         If set to True zero is odd as well (default is False)
+
+    includeEqual : bool, optional
+        If set to True equal codes return True (default is True).
     """ 
     
-    result = updwn(a, b, upstream = True, oddOrZero=oddOrZero)
+    result = updwn(a, b, upstream = True, oddOrZero=oddOrZero, includeEqual=includeEqual)
     
     return(result)
 
-def downstream(a,b,oddOrZero=False):
+def downstream(a,b,oddOrZero=False,includeEqual=True):
     """Checks if b is downstream of a.
     
     The argument 'oddOrZero' can be set to True if the Pfafstetter code is 
@@ -92,13 +95,16 @@ def downstream(a,b,oddOrZero=False):
     
     oddOrZero : bool, optional
         If set to True zero is odd as well (default is False)
+
+    includeEqual : bool, optional
+        If set to True equal codes return True (default is True).
     """ 
     
-    result = updwn(a, b, upstream = False, oddOrZero=oddOrZero)
+    result = updwn(a, b, upstream = False, oddOrZero=oddOrZero, includeEqual=includeEqual)
     
     return(result)
 
-def updwn(a, b, upstream = True, oddOrZero = False):
+def updwn(a, b, upstream = True, oddOrZero = False, includeEqual = True):
     """Checks if b is upstream or downstream of a.
     
     If 'upstream' is True it checks upstream, if False downstream.
@@ -120,6 +126,9 @@ def updwn(a, b, upstream = True, oddOrZero = False):
     
     oddOrZero : bool, optional
         If set to True zero is odd as well (default is False)
+
+    includeEqual : bool, optional
+        If set to True equal codes return True (default is True).
     """ 
     ## check input
     try:
@@ -149,9 +158,13 @@ def updwn(a, b, upstream = True, oddOrZero = False):
         A = A[:nCharB]
         nCharA = nCharB
     
-    ## return True if both are the same
-    if (A == B): return(True)
-    
+    ## return True if both are the same and includeEqual option is True
+    if (A == B):
+        if includeEqual:
+            return(True)
+        else:
+            return(False)
+
     ## this shortens the number of tests {}
     if upstream:
         ## Greater
