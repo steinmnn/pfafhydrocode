@@ -31,7 +31,7 @@ bas = df[mask]
 end = time.time()
 print('Upstream takes:',end-start)
 
-bas.to_csv('data/example_results/downstream_affected.csv')
+bas.to_csv('data/example_results/upstream_watershed.csv')
 
 #downstream
 start = time.time()
@@ -41,4 +41,4 @@ bas = df[mask]
 end = time.time()
 print('Downstream takes:',end-start)
 
-bas.to_csv('data/example_results/upstream_watershed.csv')
+bas.to_csv('data/example_results/downstream_affected.csv')

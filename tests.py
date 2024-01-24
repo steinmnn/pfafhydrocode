@@ -40,66 +40,61 @@ class TestPfafhydrocode(unittest.TestCase):
         var.assertTrue(allodd('013579', oddOrZero=True),'Should be True as 013579 are all odd.')
     
     ## updwn() function
+    def test_updwn_with_characters(var):
+        with var.assertRaises(Exception):
+            upstream('2326709420ab','232670700000')
+
     def test_updwn_with_same_number(var):
         var.assertTrue(updwn(1994,1994),'Comparing same_number_should give True.')
 
-    def test_exclude_equal_pfafcode(var):
+    def test_updwn_with_different_code_length_b_longer(var):
+        var.assertTrue(updwn(1994, 1994123), '1994123 (B) is trimmed to 1994. Same number should give True.')
+
+    def test_updwn_with_different_code_length_a_longer(var):
+        var.assertTrue(updwn(1994456, 1994), '1994456 (A) is trimmed to 1994. Same number should give True.')
+
+    def test_updwn_with_same_number_exclude_equal(var):
         var.assertFalse(updwn(1994, 1994, includeEqual=False), 'Comparing same_number_should give False when includeEqual is set False.')
         
     def test_updwn_with_a_greater_as_b(var):
-        var.assertFalse(updwn(1995,1884),"Should be False. Greater A can't be downstream of B.")
+        var.assertFalse(updwn(1995,1884),"Should be False. 1884 (B) is not upstream of 1995 (A). Higher always denote upstream segments.")
         
     def test_updwn_with_a_less_than_b_and_upstream_false(var):
-        var.assertFalse(updwn(1884,1995,upstream=False),"Should be False. Greater B can't be downstream of A if tested on downstream.")
+        var.assertFalse(updwn(1884,1995,upstream=False),"Should be False. 1995 (B) is not downstream of 1884 (A). Higher always denote upstream segments.")
         
-    def test_updwn_upstream_with_single_number_from_wiki(var):
-        var.assertTrue(updwn(8835,8833),'Should be True. As 8835 is upstream of 8833.')
+    def test_updwn_upstream_with_wikipedia_example_single_number(var):
+        var.assertTrue(updwn(8833,8835),'Should be True. 8835 (B) is upstream of 8833 (A). See wikipedia example.')
         
-    def test_updwn_downstream_with_single_number_from_wiki(var):
-        var.assertFalse(updwn(8835,8821),'Should be False. As 8835 is not upstream of 8821.')
+    def test_updwn_downstream_with_wikipedia_example_single_number(var):
+        var.assertFalse(updwn(8821,8835),'Should be False. 8835 (B) is not upstream of 8821 (A). See wikipedia example.')
         
-    def test_updwn_with_whole_wiki_example(var):
-        dwn = [8833, 8811, 8832, 8821, 9135]
-        var.assertEqual([updwn(8835,x) for x in dwn], [True, True, False, False, False], 'Should be equal. See wikipedia example.')
-        
-    def test_updwn_with_single_hydrobasins_PFAF12(var):
-        var.assertTrue(updwn(232670911100,232670700000,oddOrZero=True), 'Should be True as 232670911100 is upstream from 232670700000.')
-        
-    def test_updwn_with_single_hydrobasins_PFAF12_downstream(var):
-        var.assertFalse(updwn(232670911100,232670700000,upstream=False,oddOrZero=True), 'Should be False as 232670911100 is upstream from 232670700000.')
-    
-    def test_updwn_with_single_hydrobasins_PFAF12_far_apart(var):
-        var.assertTrue(updwn(232670942000,232670700000,oddOrZero=True), 'Should be True as 232670911100 is upstream from 232670700000.')
+    def test_updwn_with_wikipedia_example_all_numbers(var):
+        as_ = [8833, 8811, 8832, 8821, 9135]
+        var.assertEqual([updwn(a,8835) for a in as_], [True, True, False, False, False], 'Should be equal. See wikipedia example.')
         
     ## upstream() function
-    def test_upstream_with_characters(var):
-        with var.assertRaises(Exception):
-            upstream('2326709420ab','232670700000',oddOrZero=True)
-            
+
     def test_upstream_with_hybas_example_pfaf12(var):
-        var.assertTrue(upstream(232630300200,232630300300,oddOrZero=True),'Should be True as learned from QGIS project (Pfafstetter level 12).')
-        
-    def test_upstream_with_hybas_example_pfaf08(var):
-        var.assertTrue(upstream(23263030,23263030,oddOrZero=True),'Should be True as learned from QGIS project (Pfafstetter level 8.')
-        
+        var.assertTrue(upstream(232630300200,232630300300,oddOrZero=True),'Should be True as learned from QGIS project.')
+
     def test_upstream_with_different_levels(var):
         a = str(232630300200)
         b = str(232630300300)
         results = []
         for i in range(len(b)):
             results.append(upstream(a,b[:i+1],oddOrZero=True))
-            
-        var.assertEqual(results, [True for i in range(len(b))],'Should all be True, as we learned from the QGIS project.')
 
-    def test_upstream_with_a_lev5_example_array(var):
+        var.assertEqual(results, [True for i in range(len(b))],'Should all be True as we learned from the QGIS project.')
+
+    def test_upstream_with_lev5_example_array_nmizukami(var):
         a = 23267
         bs = [23261, 23262, 23263, 23264, 23265, 23267, 23266, 23268, 23269]
         rightresult = [False, False, False, False, False, False, False, True, True]
 
-        var.assertEqual(rightresult, [upstream(a,b,includeEqual=False) for b in bs],'Should be equal. Result form nmizukami/pfaf_decode pfafstetter.check_upstream.')
+        var.assertEqual(rightresult, [upstream(a,b,includeEqual=False) for b in bs],'Should be equal. Like result from nmizukami/pfaf_decode')
 
-    def test_upstream_with_a_lev5_example_single(var):
-        var.assertTrue(upstream(23267,23268,includeEqual=False),'23268 is upstream of 23267')
+    def test_upstream_with_lev5_example_nmizukami_single(var):
+        var.assertTrue(upstream(23267,23268,includeEqual=False),'23268 (B) is upstream of 23267 (A)')
 
     ## downstream() function
     def test_downstream_with_characters(var):

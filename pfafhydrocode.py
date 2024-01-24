@@ -52,8 +52,8 @@ def allodd(x, oddOrZero = False):
             return(False)
     return(True)
 
-def upstream(a,b,oddOrZero=False,includeEqual = True):
-    """Checks if b is upstream of a.
+def upstream(a, b, oddOrZero=False, includeEqual=True):
+    """Checks if b is upstream of a
     
     The argument 'oddOrZero' can be set to True if the Pfafstetter code is 
     modified and uses Zeros that need to be treated as odd e.g. HydroBASINS 
@@ -74,9 +74,9 @@ def upstream(a,b,oddOrZero=False,includeEqual = True):
         If set to True equal codes return True (default is True).
     """ 
     
-    result = updwn(a, b, upstream = True, oddOrZero=oddOrZero, includeEqual=includeEqual)
+    result = updwn(a, b, upstream=True, oddOrZero=oddOrZero, includeEqual=includeEqual)
     
-    return(result)
+    return result
 
 def downstream(a,b,oddOrZero=False,includeEqual=True):
     """Checks if b is downstream of a.
@@ -100,14 +100,14 @@ def downstream(a,b,oddOrZero=False,includeEqual=True):
         If set to True equal codes return True (default is True).
     """ 
     
-    result = updwn(a, b, upstream = False, oddOrZero=oddOrZero, includeEqual=includeEqual)
+    result = updwn(a, b, upstream=False, oddOrZero=oddOrZero, includeEqual=includeEqual)
     
-    return(result)
+    return result
 
 def updwn(a, b, upstream = True, oddOrZero = False, includeEqual = True):
-    """Checks if b is upstream or downstream of a.
+    """Checks if b is upstream of a.
     
-    If 'upstream' is True it checks upstream, if False downstream.
+    If 'upstream' is True it checks if b is downstream of a.
     
     The argument 'oddOrZero' can be set to True if the Pfafstetter code is 
     modified and uses Zeros that need to be treated as odd e.g. HydroBASINS 
@@ -144,16 +144,16 @@ def updwn(a, b, upstream = True, oddOrZero = False, includeEqual = True):
     ## number of characters
     nCharA = len(A)
     nCharB = len(B)
-    
+
     ## compare levels if one is larger
     if (nCharB > nCharA):
-        print("Warning: Higher level A is compared to lower level B. Turnicate B to same as A.")
+        print("Warning: Higher level B is compared to lower level A. Trim B to same as A.")
         
         B = B[:nCharA]
         nCharB = nCharA
         
     elif (nCharA > nCharB):
-        print('Warning: Lower level A is compared to higher level B. Turnicate A to same as B.')
+        print('Warning: Lower level B is compared to higher level A. Trim A to same as B.')
         
         A = A[:nCharB]
         nCharA = nCharB
@@ -165,39 +165,42 @@ def updwn(a, b, upstream = True, oddOrZero = False, includeEqual = True):
         else:
             return(False)
 
-    ## this shortens the number of tests {}
-    if upstream:
-        ## Greater
-        cond02 = int(A) > int(B)
-        
-        if not cond02:
-            ## exit with False
-            return(False)
-        
-    else:
-        ## is less?
-        cond02 = int(A) < int(B)
-        
-        if not cond02:
-            return(False)
+    # This shortens the test for check downstream case
+    if not upstream:
+        # higher digits always denote upstream segments
+        if b > a:
+            return False
         
     ## Core from Verdin & Verdin 1999, p. 10
     ## get number of matching digits from start
-    for i in range(1,nCharA):
-        leadA = A[0:i]
+    for n in range(1,nCharA+1):
+        leadA = A[0:n]
         if not B.startswith(leadA):
             break
 
-    ## get trailing digits
-    trailA = A[i-1:]
-    trailB = B[i-1:]
-        
-    ## all odd (or zero)
+    # get trailing digits
+    trailA = A[n-1:]
+    trailB = B[n-1:]
+
     if upstream:
-        cond01 = allodd(trailB, oddOrZero=oddOrZero)
-    else:
-        cond01 = allodd(trailA, oddOrZero=oddOrZero)
-    
-    return(cond01)
+        # B is upstream of A, if B has higher digits than A
+        # At each level, higher digits denote upstream segments
+        # Greater
+        cond01 = int(trailB) > int(trailA)
+
+        # cond02 needed?
+        cond02 = allodd(trailA, oddOrZero=oddOrZero)
+
+        return cond01 #and cond02 #only necessary for wikipedia example
+
+    else: # downstream
+        # Therefore, given a point with code A on the water system, a point with code B is downstream if:
+        # less than the remaining digits of A?
+        cond01 = int(trailB) < int(trailA)
+
+        # all odd.
+        cond02 = allodd(trailB, oddOrZero=oddOrZero)
+
+        return cond01 and cond02
     
     
