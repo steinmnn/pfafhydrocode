@@ -79,7 +79,7 @@ def upstream(a, b, oddOrZero=False, includeEqual=True):
     return result
 
 def downstream(a,b,oddOrZero=False,includeEqual=True):
-    """Checks if b is downstream of a.
+    """Checks if b is downstream of a
     
     The argument 'oddOrZero' can be set to True if the Pfafstetter code is 
     modified and uses Zeros that need to be treated as odd e.g. HydroBASINS 
@@ -105,9 +105,9 @@ def downstream(a,b,oddOrZero=False,includeEqual=True):
     return result
 
 def updwn(a, b, upstream = True, oddOrZero = False, includeEqual = True):
-    """Checks if b is upstream of a.
+    """Checks if b is upstream of a
     
-    If 'upstream' is True it checks if b is downstream of a.
+    If 'upstream' is True it checks if b is downstream of a
     
     The argument 'oddOrZero' can be set to True if the Pfafstetter code is 
     modified and uses Zeros that need to be treated as odd e.g. HydroBASINS 

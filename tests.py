@@ -100,6 +100,12 @@ class TestPfafhydrocode(unittest.TestCase):
     def test_downstream_with_characters(var):
         with var.assertRaises(Exception):
             downstream('2326709420ab','2326707000bb',oddOrZero=True)
+
+    def test_downstream_with_lev12_example_from_qgis_1(var):
+        var.assertTrue(downstream('216029033500','216029010320'), 'Should be True. As learned from QGIS example.')
+
+    def test_downstream_with_lev12_example_from_qgis_2(var):
+        var.assertTrue(downstream('216029033500','216029033400'), 'Should be True. As learned from QGIS example.')
         
 if __name__ == "__main__":
     unittest.main()
