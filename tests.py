@@ -77,6 +77,9 @@ class TestPfafhydrocode(unittest.TestCase):
     def test_upstream_with_hybas_example_pfaf12(var):
         var.assertTrue(upstream(232630300200,232630300300,oddOrZero=True),'Should be True as learned from QGIS project.')
 
+    def test_upstream_with_hybas_example_pfaf12_2(var):
+        var.assertTrue(upstream(232406690300,232406860300,oddOrZero=True),'Should be True as I learned form WebApp.')
+
     def test_upstream_with_different_levels(var):
         a = str(232630300200)
         b = str(232630300300)
