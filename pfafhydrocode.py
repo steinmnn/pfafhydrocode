@@ -191,7 +191,7 @@ def updwn(a, b, upstream = True, oddOrZero = False, includeEqual = True):
         # cond02 needed?
         cond02 = allodd(trailA, oddOrZero=oddOrZero)
 
-        return cond01 #and cond02 #only necessary for wikipedia example
+        return cond01 and cond02 #only necessary for wikipedia example
 
     else: # downstream
         # Therefore, given a point with code A on the water system, a point with code B is downstream if:
